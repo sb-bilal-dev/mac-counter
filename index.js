@@ -5,7 +5,7 @@ const app = express();
 const Nano = require("nano");
 
 // Connection URL and database name
-const couchURL = "http://localhost:5984"; // Replace with your CouchDB URL
+const couchURL = "http://127.0.0.1:5984/"; // Replace with your CouchDB URL
 const dbName = "your-database-name"; // Replace with your database name
 
 // Initialize CouchDB client and connect to the database
