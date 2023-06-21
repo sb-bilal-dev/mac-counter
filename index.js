@@ -33,24 +33,27 @@ app.get("/", (req, res) => {
     if (!automobiles[model]) {
       automobiles[model] = [];
     }
-    automobiles[model].push(mac_address);
-    var quantity = automobiles[model].length;
 
-    // Write the updated data to the JSON file
-    try {
-      fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(automobiles, null, 2), "utf8");
-    } catch (err) {
-      console.error("Failed to write data to the file:", err);
-      res.status(500).send("Failed to store the mac_address.\n");
-      return;
+    if (!automobiles[model].includes(mac_address)) {
+        automobiles[model].push(mac_address);
+        var quantity = automobiles[model].length;
+    
+        // Write the updated data to the JSON file
+        try {
+          fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(automobiles, null, 2), "utf8");
+        } catch (err) {
+          console.error("Failed to write data to the file:", err);
+          res.status(500).send("Failed to store the mac_address.\n");
+          return;
+        }
+    
+        // Send a response indicating successful storage
+        var responseBody = `Successfully stored mac_address "${mac_address}", #${quantity} for model "${model}".\n`
+        res
+          .status(200)
+          .send(responseBody);
+          console.log(responseBody)    
     }
-
-    // Send a response indicating successful storage
-    var responseBody = `Successfully stored mac_address "${mac_address}", #${quantity} for model "${model}".\n`
-    res
-      .status(200)
-      .send(responseBody);
-      console.log(responseBody)
   } else {
     // Send an error response for invalid requests
     res.status(400).send("Invalid request.\n");
