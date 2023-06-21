@@ -10,9 +10,14 @@ const dataFilePath = "automobiles.json";
 // Read the existing data from the JSON file
 let automobiles = {};
 try {
+  if (!fs.existsSync(dataFilePath)) {
+    fs.writeFileSync(dataFilePath, JSON.stringify({}));
+  }
+  
   const data = fs.readFileSync(dataFilePath, "utf8");
   automobiles = JSON.parse(data);
 } catch (err) {
+
   console.error("Failed to read data from the file:", err);
 }
 
