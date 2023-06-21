@@ -5,20 +5,23 @@ const fs = require("fs");
 const app = express();
 
 // Path to the JSON file for storing the data
-const dataFilePath = "automobiles.json";
+const DATA_FILE_PATH = "automobiles.json";
 
 // Read the existing data from the JSON file
-let automobiles = {};
-try {
-  if (!fs.existsSync(dataFilePath)) {
-    fs.writeFileSync(dataFilePath, JSON.stringify({}));
-  }
-  
-  const data = fs.readFileSync(dataFilePath, "utf8");
-  automobiles = JSON.parse(data);
-} catch (err) {
+let automobiles = initDB();
 
-  console.error("Failed to read data from the file:", err);
+function initDB() {
+    try {
+    if (!fs.existsSync(DATA_FILE_PATH)) {
+        fs.writeFileSync(DATA_FILE_PATH, JSON.stringify({}));
+    }
+    
+    const data = fs.readFileSync(DATA_FILE_PATH, "utf8");
+    return JSON.parse(data);
+    } catch (err) {
+      console.error("Failed to read data from the file:", err);
+      return {}
+    }
 }
 
 // Configure the route to handle GET requests
@@ -35,7 +38,7 @@ app.get("/", (req, res) => {
 
     // Write the updated data to the JSON file
     try {
-      fs.writeFileSync(dataFilePath, JSON.stringify(automobiles, null, 2), "utf8");
+      fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(automobiles, null, 2), "utf8");
     } catch (err) {
       console.error("Failed to write data to the file:", err);
       res.status(500).send("Failed to store the mac_address.\n");
@@ -46,7 +49,7 @@ app.get("/", (req, res) => {
     var responseBody = `Successfully stored mac_address "${mac_address}", #${quantity} for model "${model}".\n`
     res
       .status(200)
-      .send(resopnseBody);
+      .send(responseBody);
       console.log(responseBody)
   } else {
     // Send an error response for invalid requests
