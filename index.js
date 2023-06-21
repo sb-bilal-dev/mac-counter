@@ -13,7 +13,7 @@ const client = new MongoClient(mongoURI);
 
 // Middleware to ensure the database connection is established before handling requests
 app.use((req, res, next) => {
-  if (!client.isConnected()) {
+  if (!client.isConnected) {
     client.connect()
       .then(() => {
         req.db = client.db(dbName);
