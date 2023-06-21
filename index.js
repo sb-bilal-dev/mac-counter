@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
     }
 
     if (automobiles[model].includes(mac_address)) {
+        console.log("Duplicate mac received: ", mac_address)
         res.status(202).send(`Mac Address: ${mac_address} for model: ${model} already exist`)
     } else {
         automobiles[model].push(mac_address);
@@ -62,6 +63,17 @@ app.get("/", (req, res) => {
     res.status(400).send("Invalid request.\n");
   }
 });
+
+app.get("/count", (req, res) => {
+    const { model } = req.query;
+    if (!model) {
+        res.status(400).send("Provide model")
+    } else {
+        var quantity = automobiles[model].length;
+
+        res.status(200).send(quantity)
+    }
+})
 
 app.get("/delete_all", (_, res) => {
     try {
